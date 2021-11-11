@@ -17,12 +17,26 @@ public class ReadFromConsole {
         dateOfLaunchToReport = dateOfLaunchFromConsole;
         return dateOfLaunchToReport;
     }
-    static String typeOfReport = "";
 
+    static String timeReport = "";
+
+    public static String getTimeReport() {
+        final Scanner in = new Scanner(System.in);
+        final String patternTime = "(1?[0-8])";
+        String timeFromConsole = "";
+        do {
+            System.out.println("Please insert time from 10 to 18");
+            timeFromConsole = in.nextLine();
+        } while (!timeFromConsole.matches(patternTime));
+        timeReport = timeFromConsole;
+        return timeReport;
+    }
+
+    static String typeOfReport = "";
     public static String getTypeOfReport() {
         final Scanner in = new Scanner(System.in);
         //считываем тип отчета с консоли
-        System.out.println("Please insert the type of Report, short (empty) or full(write some text)");
+        System.out.println("Please insert the type of Report, short (empty or 0) or full(write any text)");
         String textFromConsole = in.nextLine();
         if (textFromConsole.isEmpty() | textFromConsole.equals("0")) {
             typeOfReport = "short";

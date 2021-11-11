@@ -9,4 +9,5 @@ public enum StudentIvanov {
     public String getValue() {
         return value;
     }
+
 }
