@@ -5,7 +5,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class Report {
     public static void reportToConsole(Student student) {
-        int daysBetween = getDaysBetween(student);
+        int daysBetween = getDaysBetween(student, ReadFromConsole.dateOfLaunchToReport);
         int daysPass = daysBetween - student.getDurCourses();
         Object[] keys = student.getCourses().keySet().toArray();
         String key0 = (String) keys[0];
@@ -25,6 +25,7 @@ public class Report {
         if (value2 + value0 + value1 < (daysBetween/8) ) {
            status[2] = "complete";
         }  else status[2] = "not complete. Left " + ((value0 + value1+value2) - daysBetween*8) + " hours";
+
         if (ReadFromConsole.typeOfReport.equals("short")) {
             System.out.println("(Generating report date - " + ReadFromConsole.dateOfLaunchToReport + "):");
             if (daysBetween > student.getDurCourses()) {
@@ -53,26 +54,23 @@ public class Report {
                 System.out.println("start date: " + student.getStartDate());
                 System.out.println("end date: Not complete " );
                 System.out.println("Training is not completed. " + (-daysPass) + " days are left until the end.");
-
             }
         }
-
     }
 
-    private static int getDaysBetween(Student student) {
+     static int getDaysBetween(Student student, String dateOfLaunch) {
         DateTimeFormatter fmt2 = DateTimeFormat.forPattern("dd.MM.yyyy");
         DateTime dt3 = fmt2.parseDateTime(student.getStartDate());
-        DateTime dt2 = fmt2.parseDateTime(ReadFromConsole.dateOfLaunchToReport);
+        DateTime dt2 = fmt2.parseDateTime(dateOfLaunch);
         int daysBetween = Days.daysBetween(dt3, dt2).getDays();  //вычисляем сколько дней прошло с момента старта
         return daysBetween;
     }
 
-    private static String endDateCourse(Student student) {
+     static String endDateCourse(Student student) {
         DateTimeFormatter fmt2 = DateTimeFormat.forPattern("dd.MM.yyyy");
         DateTime dt3 = fmt2.parseDateTime(student.getStartDate());
         DateTime endDateCourse = (dt3.plusDays(student.getDurCourses()));
         String dt4 = endDateCourse.toString(fmt2);
-//         System.out.println(dt4);
         return dt4;
     }
 

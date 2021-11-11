@@ -19,10 +19,7 @@ public class Developer extends Student{
     @Override
     public int getDurCourses() {
         setCourses();
-//        int durDevCourse = 0;
         int durDevCourse = (Courses.get("Java").intValue() + Courses.get("JDBC").intValue() + Courses.get("Spring").intValue())/8;
-//        System.out.println(Courses.get("Java").intValue());
-
         return durDevCourse;
     }
 
