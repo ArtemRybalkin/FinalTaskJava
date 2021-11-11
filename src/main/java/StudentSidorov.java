@@ -1,6 +1,5 @@
 public enum StudentSidorov {
-    NAME ("SIDOROV IVAN"), CURRICULUM ("AQE"), START_DATE ("01 01 2020"), TestDesign ("10"),
-    PageObject ("16"), Selenium ("16");
+    NAME ("SIDOROV IVAN"), CURRICULUM ("AQE"), START_DATE ("01.01.2020");
     private String value;
 
    StudentSidorov(String value) {

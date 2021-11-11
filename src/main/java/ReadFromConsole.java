@@ -1,11 +1,11 @@
 import java.util.Scanner;
 
 public class ReadFromConsole {
-    static final Scanner in = new Scanner(System.in);
 
+    static String dateOfLaunchToReport = "";
 //
     public static String getDateFromConsole() {
-        String dateOfLaunchToReport = "";
+        final Scanner in = new Scanner(System.in);
 //        добавить обработку, если введут дату дальше сегодня
         final String patternDate = "(0?[1-9]|[12][0-9]|3[01])\\.(0?[1-9]|1[012])\\.((20)\\d\\d)";
         String dateOfLaunchFromConsole = "";
@@ -17,11 +17,12 @@ public class ReadFromConsole {
         dateOfLaunchToReport = dateOfLaunchFromConsole;
         return dateOfLaunchToReport;
     }
-
+    static String typeOfReport = "";
     public static String getTypeOfReportFromConsole() {
+
+        final Scanner in = new Scanner(System.in);
         //считываем тип отчета с консоли
-        System.out.println("Please insert the type of Report, short or full");
-        String typeOfReport = "";
+        System.out.println("Please insert the type of Report, short (empty) or full(write some text)");
         String textFromConsole = in.nextLine();
         if (textFromConsole.isEmpty() | textFromConsole.equals("0")) {
             typeOfReport = "short";
