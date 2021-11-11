@@ -18,7 +18,7 @@ public class MainClass {
        ReadFromConsole.getTypeOfReport();
 //        вывести отчет
         Report.reportToConsole(ivanov);
-//        Report.reportToConsole(sidorov);
+        Report.reportToConsole(sidorov);
 
 
 

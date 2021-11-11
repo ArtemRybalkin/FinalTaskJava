@@ -13,7 +13,11 @@ import java.util.Date;
 public class Report {
     public static void reportToConsole(Student student) throws ParseException {
         int daysBetween = getDaysBetween(student, ReadFromConsole.dateOfLaunchToReport);
-        int daysPass = daysBetween - student.getDurCourses();
+        if (daysBetween > 6) daysBetween -=2;      // с учётом рабочей недели
+//        int daysPass = daysBetween - student.getDurCourses();
+        int hours = Integer.parseInt(ReadFromConsole.timeReport);
+        int hoursPassNot = (-((daysBetween*8) - (student.getDurCourses()))) - (hours - 10) ;
+        String daysPassNot = hoursPassNot/8 + " days " + hoursPassNot%8 + " hours";
         String formatedDete = convertLaunchDate();
         Object[] keys = student.getCourses().keySet().toArray();
         String key0 = (String) keys[0];
@@ -38,12 +42,12 @@ public class Report {
         if (ReadFromConsole.typeOfReport.equals("short")) {
             System.out.println("(Generating report date - " + formatedDete +
                     ", " + ReadFromConsole.timeReport + ":00" + "):");
-            if (daysBetween > student.getDurCourses()) {
-                System.out.println(student.getName() + " " + student.getCurr() + " - Training completed. " + daysPass +
+            if ((daysBetween*8 + hours) > student.getDurCourses()) {
+                System.out.println(student.getName() + " " + student.getCurr() + " - Training completed. " + (daysPassNot) +
                         " days have passed since the end.");
             } else {
                 System.out.println(student.getName() + " " + student.getCurr() + " - Training is not finished. " +
-                        (-daysPass) + " days are left until the end.");
+                        daysPassNot + " days are left until the end.");
             }
         } else {
             if (daysBetween > student.getDurCourses()) {
@@ -54,7 +58,7 @@ public class Report {
                 System.out.println(key2 + "  " + value2 + " hours " + " Status: " + status[2]);
                 System.out.println("start date: " + student.getStartDate());
                 System.out.println("end date: " + endDateCourse(student));
-                System.out.println("Training completed. " + daysPass + " days have passed since the end.");
+                System.out.println("Training completed. " + "daysPass" + " days have passed since the end.");
             } else {
                 System.out.println(student.getName());
                 System.out.println("working time (from 10 to 18): " + daysBetween + " days");
@@ -63,7 +67,7 @@ public class Report {
                 System.out.println(key2 + "  " + value2 + " hours " + " Status: " + status[2]);
                 System.out.println("start date: " + student.getStartDate());
                 System.out.println("end date: Not complete ");
-                System.out.println("Training is not completed. " + (-daysPass) + " days are left until the end.");
+                System.out.println("Training is not completed. " + "(-daysPass)" + " days are left until the end.");
             }
         }
     }

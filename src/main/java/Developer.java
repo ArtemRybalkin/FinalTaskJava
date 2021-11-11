@@ -19,8 +19,9 @@ public class Developer extends Student{
     @Override
     public int getDurCourses() {
         setCourses();
-        int durDevCourse = (Courses.get("Java").intValue() + Courses.get("JDBC").intValue() + Courses.get("Spring").intValue())/8;
-        return durDevCourse;
+        int durDevCourseDays = (Courses.get("Java").intValue() + Courses.get("JDBC").intValue() + Courses.get("Spring").intValue());
+        int durDevCourseHours = (Courses.get("Java").intValue() + Courses.get("JDBC").intValue() + Courses.get("Spring").intValue())%8;
+        return durDevCourseDays;
     }
 
     public Developer(String name, String CURRICULUM, String startDate, Map courses) {

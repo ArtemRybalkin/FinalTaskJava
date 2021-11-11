@@ -17,8 +17,11 @@ public class AQE extends Student {
     @Override
     public int getDurCourses() {
         setCourses();
-        int durAQECourse = (Courses.get("TestDesign").intValue() + Courses.get("PageObject").intValue() + Courses.get("Selenium").intValue())/8;
-        return durAQECourse;
+        int durAQECourseDays = (Courses.get("TestDesign").intValue() + Courses.get("PageObject").intValue() +
+                Courses.get("Selenium").intValue());
+        int durAQECourseHours = (Courses.get("TestDesign").intValue() + Courses.get("PageObject").intValue()
+                + Courses.get("Selenium").intValue())%8;
+        return durAQECourseDays;
     }
 
     public AQE(String name, String CURRICULUM, String startDate, Map courses) {
