@@ -12,13 +12,13 @@ public class Report {
         int daysBetween = getDaysBetween(student, dateOfLaunchToReport);
         int numbOfWeekends = (daysBetween / 7) * 2;
         if (daysBetween > 5) daysBetween -= numbOfWeekends;      // с учётом рабочей недели
-//        int daysPass = daysBetween - student.getDurCourses();
+
         int hoursFromConsole = Integer.parseInt(timeReport);
         int allHours = (daysBetween * 8) + (hoursFromConsole - 10);
         int hoursPass = (student.getDurCourses() - allHours);
         String daysPassNot = hoursPass / 8 + " days " + hoursPass % 8 + " hours";
         String daysPass = (-hoursPass / 8) + " days " + (-hoursPass % 8) + " hours";
-        String formatedDete = convertLaunchDate(dateOfLaunchToReport);
+        String formatDate = convertLaunchDate(dateOfLaunchToReport);
         Object[] keys = student.getCourses().keySet().toArray();
         String key0 = (String) keys[0];
         String key1 = (String) keys[1];
@@ -40,7 +40,7 @@ public class Report {
         } else status[2] = "not complete. Left " + ((value0 + value1 + value2) - allHours) + " hours";
 
         if (typeReport.equals("short")) {
-            System.out.println("(Generating report date - " + formatedDete +
+            System.out.println("(Generating report date - " + formatDate +
                     ", " + hoursFromConsole + ":00" + "):");
             if (hoursPass <= 0) {
                 System.out.println(student.getName() + " " + student.getCurr() + " - Training completed. " + daysPass +
@@ -72,15 +72,13 @@ public class Report {
         }
     }
 
-
     static String convertLaunchDate(String dateOfLaunchToReport) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
         SimpleDateFormat formatter2 = new SimpleDateFormat("dd MMMM yyyy, EEEE");
         Date date = formatter.parse(dateOfLaunchToReport);
-        String formatedDete = formatter2.format(date);
-        return formatedDete;
+        String formatDate = formatter2.format(date);
+        return formatDate;
     }
-
 
     static int getDaysBetween(Student student, String dateOfLaunch) {
         DateTimeFormatter fmt2 = DateTimeFormat.forPattern("dd.MM.yyyy");
@@ -98,6 +96,5 @@ public class Report {
         String dt4 = endDateCourse.toString(fmt2);
         return dt4;
     }
-
 
 }
