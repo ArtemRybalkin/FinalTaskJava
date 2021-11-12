@@ -1,30 +1,26 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Developer extends Student{
-    static Map<String, Integer> Courses = new HashMap<String, Integer>();
+public class Developer extends Student {
+    static Map<String, Integer> courses = new HashMap<>();
 
-    public void setCourses () {
-        Courses.put("Java",16);
-        Courses.put("JDBC",24);
-        Courses.put("Spring",16);
+    {
+        courses.put("Java", 16);
+        courses.put("JDBC", 24);
+        courses.put("Spring", 16);
     }
 
     @Override
-    public Map getCourses() {
-        setCourses();
-        return Courses;
+    public Map<String, Integer> getCourses() {
+        return courses;
     }
 
     @Override
     public int getDurCourses() {
-        setCourses();
-        int durDevCourseDays = (Courses.get("Java").intValue() + Courses.get("JDBC").intValue() + Courses.get("Spring").intValue());
-        int durDevCourseHours = (Courses.get("Java").intValue() + Courses.get("JDBC").intValue() + Courses.get("Spring").intValue())%8;
-        return durDevCourseDays;
+        return (courses.get("Java") + courses.get("JDBC") + courses.get("Spring"));
     }
 
-    public Developer(String name, String CURRICULUM, String startDate, Map courses) {
+    public Developer(String name, String CURRICULUM, String startDate, Map<String, Integer> courses) {
         super(name, CURRICULUM, startDate, courses);
     }
 }

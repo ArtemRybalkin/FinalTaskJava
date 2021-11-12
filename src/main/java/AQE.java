@@ -2,29 +2,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AQE extends Student {
-    static Map<String, Integer> Courses = new HashMap<String, Integer>();
+    static Map<String, Integer> courses = new HashMap<>();
 
-    public void setCourses() {
-        AQE.Courses.put("TestDesign",10);
-        AQE.Courses.put("PageObject",16);
-        AQE.Courses.put("Selenium",16);
+    {
+        AQE.courses.put("TestDesign", 10);
+        AQE.courses.put("PageObject", 16);
+        AQE.courses.put("Selenium", 16);
     }
+
     @Override
-    public Map getCourses() {
-        setCourses();
-        return AQE.Courses;
+    public Map<String, Integer> getCourses() {
+        return AQE.courses;
     }
+
     @Override
     public int getDurCourses() {
-        setCourses();
-        int durAQECourseDays = (Courses.get("TestDesign").intValue() + Courses.get("PageObject").intValue() +
-                Courses.get("Selenium").intValue());
-        int durAQECourseHours = (Courses.get("TestDesign").intValue() + Courses.get("PageObject").intValue()
-                + Courses.get("Selenium").intValue())%8;
-        return durAQECourseDays;
+        return (courses.get("TestDesign") + courses.get("PageObject") + courses.get("Selenium"));
     }
 
-    public AQE(String name, String CURRICULUM, String startDate, Map courses) {
+    public AQE(String name, String CURRICULUM, String startDate, Map<String, Integer> courses) {
         super(name, CURRICULUM, startDate, courses);
     }
 }

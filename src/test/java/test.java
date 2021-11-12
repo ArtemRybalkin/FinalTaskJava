@@ -18,11 +18,6 @@ public class test {
         String endDate = Report.endDateCourse(MainClass.ivanov, 0);
         Assert.assertEquals("08.06.2020", endDate);
     }
-//    @Before
-//    public void test() {
-//        Scanner in = new Scanner(System.in);
-//        String typeReport = ReadFromConsole.getTypeOfReport(in);
-//    }
 
     @Test
     public void checkTypeReportShort () {

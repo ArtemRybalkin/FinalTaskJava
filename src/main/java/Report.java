@@ -5,10 +5,18 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Report {
-    public static void reportToConsole(Student student, String dateOfLaunchToReport, String typeReport, String timeReport) throws ParseException {
+
+    private List<String> fullStatusList;
+    private List<Integer> courseDurationList;
+    private List<String> courseNameList;
+
+
+    public void reportToConsole(Student student, String dateOfLaunchToReport, String typeReport, String timeReport) throws ParseException {
         int daysBetween = getDaysBetween(student, dateOfLaunchToReport);
         int numbOfWeekends = (daysBetween / 7) * 2;
         if (daysBetween > 5) daysBetween -= numbOfWeekends;      // с учётом рабочей недели
@@ -16,32 +24,18 @@ public class Report {
         int hoursFromConsole = Integer.parseInt(timeReport);
         int allHours = (daysBetween * 8) + (hoursFromConsole - 10);
         int hoursPass = (student.getDurCourses() - allHours);
+
         String daysPassNot = hoursPass / 8 + " days " + hoursPass % 8 + " hours";
         String daysPass = (-hoursPass / 8) + " days " + (-hoursPass % 8) + " hours";
         String formatDate = convertLaunchDate(dateOfLaunchToReport);
-        Object[] keys = student.getCourses().keySet().toArray();
-        String key0 = (String) keys[0];
-        String key1 = (String) keys[1];
-        String key2 = (String) keys[2];
-        Object[] values = student.getCourses().values().toArray();
-        int value0 = (Integer) values[0];
-        int value1 = (Integer) values[1];
-        int value2 = (Integer) values[2];
-        String[] status = new String[3];
 
-        if (value0 <= allHours) {
-            status[0] = "complete";
-        } else status[0] = "not complete. Left " + (value0 - allHours) + " hours";
-        if ((value1 + value0) <= allHours) {
-            status[1] = "complete";
-        } else status[1] = "not complete. Left " + ((value0 + value1) - allHours) + " hours";
-        if ((value2 + value0 + value1) <= allHours) {
-            status[2] = "complete";
-        } else status[2] = "not complete. Left " + ((value0 + value1 + value2) - allHours) + " hours";
+        courseNameList = student.getCourseNames();
+        courseDurationList = student.getCourseDuration();
+        fullStatusList = new ArrayList<>();
+        getStatus(allHours);
 
         if (typeReport.equals("short")) {
-            System.out.println("(Generating report date - " + formatDate +
-                    ", " + hoursFromConsole + ":00" + "):");
+            System.out.println("(Generating report date - " + formatDate + ", " + hoursFromConsole + ":00" + "):");
             if (hoursPass <= 0) {
                 System.out.println(student.getName() + " " + student.getCurr() + " - Training completed. " + daysPass +
                         " have passed since the end.");
@@ -49,27 +43,43 @@ public class Report {
                 System.out.println(student.getName() + " " + student.getCurr() + " - Training is not finished. " +
                         daysPassNot + " are left until the end.");
             }
-        } else {
+        } else {   //если тип отчета full
+            System.out.println(student.getName());
             if (hoursPass <= 0) {
-                System.out.println(student.getName());
                 System.out.println("working time (from 10 to 18): " + student.getDurCourses() + " hours");
-                System.out.println(key0 + "  " + value0 + " hours " + " Status: " + status[0]);
-                System.out.println(key1 + "  " + value1 + " hours " + " Status: " + status[1]);
-                System.out.println(key2 + "  " + value2 + " hours " + " Status: " + status[2]);
+                printStatus();
                 System.out.println("start date: " + student.getStartDate());
                 System.out.println("end date: " + endDateCourse(student, numbOfWeekends));
                 System.out.println("Training completed. " + daysPass + " days have passed since the end.");
             } else {
-                System.out.println(student.getName());
                 System.out.println("working time (from 10 to 18): " + allHours + " hours");
-                System.out.println(key0 + "  " + value0 + " hours " + " Status: " + status[0]);
-                System.out.println(key1 + "  " + value1 + " hours " + " Status: " + status[1]);
-                System.out.println(key2 + "  " + value2 + " hours " + " Status: " + status[2]);
+                printStatus();
                 System.out.println("start date: " + student.getStartDate());
                 System.out.println("end date: Not complete ");
                 System.out.println("Training is not completed. " + daysPassNot + " are left until the end.");
             }
         }
+    }
+
+    private void getStatus(int allHours) {
+        if (courseDurationList.get(0) <= allHours) {
+            fullStatusList.add(String.valueOf(Status.COMPLETE.getStatus()));
+        } else
+            fullStatusList.add(Status.NOT_COMPLETE.getStatus() + (courseDurationList.get(0) - allHours) + " hours left");
+        if ((courseDurationList.get(1) + courseDurationList.get(0)) <= allHours) {
+            fullStatusList.add(Status.COMPLETE.getStatus());
+        } else
+            fullStatusList.add(Status.NOT_COMPLETE.getStatus() + " " + ((courseDurationList.get(0) + courseDurationList.get(1)) - allHours) + " hours left");
+        if ((courseDurationList.get(2) + courseDurationList.get(0) + courseDurationList.get(1)) <= allHours) {
+            fullStatusList.add(Status.COMPLETE.getStatus());
+        } else
+            fullStatusList.add(Status.NOT_COMPLETE.getStatus() + " " + ((courseDurationList.get(0) + courseDurationList.get(1) + courseDurationList.get(2)) - allHours) + " hours left");
+    }
+
+    private void printStatus () {
+        System.out.printf("%s %s hours " + " Status: " + fullStatusList.get(0) + "\n", courseNameList.get(0), courseDurationList.get(0));
+        System.out.printf("%s %s hours " + " Status: " + fullStatusList.get(1) + "\n", courseNameList.get(1), courseDurationList.get(1));
+        System.out.printf("%s %s hours " + " Status: " + fullStatusList.get(2) + "\n", courseNameList.get(2), courseDurationList.get(2));
     }
 
     static String convertLaunchDate(String dateOfLaunchToReport) throws ParseException {
