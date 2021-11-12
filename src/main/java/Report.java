@@ -8,17 +8,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Report {
-    public static void reportToConsole(Student student) throws ParseException {
-        int daysBetween = getDaysBetween(student, ReadFromConsole.dateOfLaunchToReport);
-        int numbOfWeekends = (daysBetween/7)*2;
+    public static void reportToConsole(Student student, String dateOfLaunchToReport, String typeReport, String timeReport) throws ParseException {
+        int daysBetween = getDaysBetween(student, dateOfLaunchToReport);
+        int numbOfWeekends = (daysBetween / 7) * 2;
         if (daysBetween > 5) daysBetween -= numbOfWeekends;      // с учётом рабочей недели
 //        int daysPass = daysBetween - student.getDurCourses();
-        int hoursFromConsole = Integer.parseInt(ReadFromConsole.timeReport);
-        int allHours = (daysBetween*8) + (hoursFromConsole - 10);
-        int hoursPass = (student.getDurCourses() - allHours) ;
-        String daysPassNot = hoursPass/8 + " days " + hoursPass %8 + " hours";
-        String daysPass = (-hoursPass/8) + " days " + (-hoursPass %8) + " hours";
-        String formatedDete = convertLaunchDate();
+        int hoursFromConsole = Integer.parseInt(timeReport);
+        int allHours = (daysBetween * 8) + (hoursFromConsole - 10);
+        int hoursPass = (student.getDurCourses() - allHours);
+        String daysPassNot = hoursPass / 8 + " days " + hoursPass % 8 + " hours";
+        String daysPass = (-hoursPass / 8) + " days " + (-hoursPass % 8) + " hours";
+        String formatedDete = convertLaunchDate(dateOfLaunchToReport);
         Object[] keys = student.getCourses().keySet().toArray();
         String key0 = (String) keys[0];
         String key1 = (String) keys[1];
@@ -39,7 +39,7 @@ public class Report {
             status[2] = "complete";
         } else status[2] = "not complete. Left " + ((value0 + value1 + value2) - allHours) + " hours";
 
-        if (ReadFromConsole.typeOfReport.equals("short")) {
+        if (typeReport.equals("short")) {
             System.out.println("(Generating report date - " + formatedDete +
                     ", " + hoursFromConsole + ":00" + "):");
             if (hoursPass <= 0) {
@@ -62,7 +62,7 @@ public class Report {
             } else {
                 System.out.println(student.getName());
                 System.out.println("working time (from 10 to 18): " + allHours + " hours");
-                System.out.println(keys[0] + "  " + value0 + " hours " + " Status: " + status[0]);
+                System.out.println(key0 + "  " + value0 + " hours " + " Status: " + status[0]);
                 System.out.println(key1 + "  " + value1 + " hours " + " Status: " + status[1]);
                 System.out.println(key2 + "  " + value2 + " hours " + " Status: " + status[2]);
                 System.out.println("start date: " + student.getStartDate());
@@ -73,11 +73,10 @@ public class Report {
     }
 
 
-
-    static String convertLaunchDate() throws ParseException {
+    static String convertLaunchDate(String dateOfLaunchToReport) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
         SimpleDateFormat formatter2 = new SimpleDateFormat("dd MMMM yyyy, EEEE");
-        Date date = formatter.parse(ReadFromConsole.dateOfLaunchToReport);
+        Date date = formatter.parse(dateOfLaunchToReport);
         String formatedDete = formatter2.format(date);
         return formatedDete;
     }
@@ -95,7 +94,7 @@ public class Report {
     static String endDateCourse(Student student, int numbOfWeekends) {
         DateTimeFormatter fmt2 = DateTimeFormat.forPattern("dd.MM.yyyy");
         DateTime dt3 = fmt2.parseDateTime(student.getStartDate());
-        DateTime endDateCourse = (dt3.plusDays(student.getDurCourses()/8 + numbOfWeekends));
+        DateTime endDateCourse = (dt3.plusDays(student.getDurCourses() / 8 + numbOfWeekends));
         String dt4 = endDateCourse.toString(fmt2);
         return dt4;
     }

@@ -1,5 +1,5 @@
 public enum StudentIvanov {
-    NAME ("IVANOV IVAN"), CURRICULUM ("Java Developer"), START_DATE ("01.06.2020");
+    NAME ("IVANOV IVAN"), CURR ("Java Developer"), START_DATE ("01.06.2020");
     private String value;
 
    StudentIvanov(String value) {
