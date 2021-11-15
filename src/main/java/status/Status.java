@@ -1,3 +1,5 @@
+package status;
+
 public enum Status {
 
     COMPLETE ("complete"),

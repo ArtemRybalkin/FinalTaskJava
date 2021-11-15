@@ -1,7 +1,12 @@
+package report;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import status.Status;
+import student.Student;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -85,7 +90,7 @@ public class Report {
 
     private void printStatus() {
         for (int i = 0; i < courseNameList.size(); i++) {
-            System.out.printf("%s %s hours " + " Status: " + fullStatusList.get(i) + "\n", courseNameList.get(i), courseDurationList.get(i));
+            System.out.printf("%s %s hours " + " status.Status: " + fullStatusList.get(i) + "\n", courseNameList.get(i), courseDurationList.get(i));
         }
     }
 
@@ -96,7 +101,7 @@ public class Report {
         return formatter2.format(date);
     }
 
-    static int getDaysBetween(Student student, String dateOfLaunch) {
+   public static int getDaysBetween(Student student, String dateOfLaunch) {
         DateTimeFormatter fmt2 = DateTimeFormat.forPattern("dd.MM.yyyy");
         DateTime dt3 = fmt2.parseDateTime(student.getStartDate());
         DateTime dt2 = fmt2.parseDateTime(dateOfLaunch);
@@ -105,7 +110,7 @@ public class Report {
         return daysBetween;
     }
 
-    static String endDateCourse(Student student, int numbOfWeekends) {
+   public static String endDateCourse(Student student, int numbOfWeekends) {
         DateTimeFormatter fmt2 = DateTimeFormat.forPattern("dd.MM.yyyy");
         DateTime dt3 = fmt2.parseDateTime(student.getStartDate());
         DateTime endDateCourse = (dt3.plusDays(student.getDurAllCourses() / 8 + numbOfWeekends));

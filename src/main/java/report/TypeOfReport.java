@@ -1,3 +1,5 @@
+package report;
+
 public enum TypeOfReport {
     shortReport ("Short"),
     fullReport ("Full");

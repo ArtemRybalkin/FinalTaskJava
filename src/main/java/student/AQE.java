@@ -1,10 +1,8 @@
-import lombok.Data;
-import lombok.Getter;
+package student;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 
 public class AQE extends Student {
@@ -22,7 +20,11 @@ public class AQE extends Student {
     }
 
     public int getDurAllCourses() {
-        return (courseDurations.get(0) + courseDurations.get(1) + courseDurations.get(2));
+        int sum = 0;
+        for (Integer courseDuration : courseDurations) {
+            sum += courseDuration;
+        }
+        return sum;
     }
 
     public AQE(String name, String CURRICULUM, String startDate) {

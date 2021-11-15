@@ -1,6 +1,7 @@
+import console.ReadFromConsole;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import report.Report;
 
 import java.util.Scanner;
 

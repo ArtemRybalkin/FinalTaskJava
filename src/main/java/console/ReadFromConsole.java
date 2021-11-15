@@ -1,3 +1,7 @@
+package console;
+
+import report.TypeOfReport;
+
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -38,7 +42,7 @@ public class ReadFromConsole {
     public static String getTypeOfReport() {
         String typeOfReport = "";
         //считываем тип отчета с консоли
-        System.out.println("Please insert the type of Report, short (empty or 0) or full(write any text)");
+        System.out.println("Please insert the type of report.Report, short (empty or 0) or full(write any text)");
         String textFromConsole = in.nextLine();
         if (textFromConsole.isEmpty() | textFromConsole.equals("0")) {
             typeOfReport = TypeOfReport.shortReport.getTypeOfReport();

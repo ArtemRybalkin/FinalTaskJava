@@ -1,9 +1,7 @@
-import lombok.Getter;
+package student;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Developer extends Student {
 
@@ -13,20 +11,24 @@ public class Developer extends Student {
     public List<String> getCourseNames() {
         return courseNames;
     }
+
     public List<Integer> getCourseDuration() {
         return courseDurations;
     }
 
     public int getDurAllCourses() {
-        return (courseDurations.get(0) + courseDurations.get(1) + courseDurations.get(2));
+        int sum = 0;
+        for (Integer courseDuration : courseDurations) {
+            sum += courseDuration;
+        }
+        return sum;
     }
 
     public Developer(String name, String CURRICULUM, String startDate) {
         super(name, CURRICULUM, startDate, courseNames, courseDurations);
-
-        courseNames.add("Java");
-        courseNames.add("JDBC");
-        courseNames.add("Spring");
+        courseNames.add(0, "Java");
+        courseNames.add(1, "JDBC");
+        courseNames.add(2, "Spring");
         courseDurations.add(0, 16);
         courseDurations.add(1, 24);
         courseDurations.add(2, 16);
