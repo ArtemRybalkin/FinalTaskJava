@@ -10,7 +10,7 @@ public class test {
 
     @Test
    public void checkDaysBetween() {
-      int days = Report.getDaysBetween(MainClass.sidorov, "06.06.2020");
+      int days = Report.getDaysBetween(MainClass.ivanov, "06.06.2020");
         Assert.assertTrue(days == 5);
     }
     @Test
@@ -22,6 +22,6 @@ public class test {
     @Test
     public void checkTypeReportShort () {
 
-        Assert.assertEquals("short", ReadFromConsole.getTypeOfReport(in));
+        Assert.assertEquals("short", ReadFromConsole.getTypeOfReport());
     }
 }

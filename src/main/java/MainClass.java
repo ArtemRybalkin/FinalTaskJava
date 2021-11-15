@@ -1,26 +1,31 @@
+
+
 import java.text.ParseException;
 import java.util.Scanner;
 
 public class MainClass {
     //    TODO сделать переменные приватными
-//    TODO
-    static final Scanner in = new Scanner(System.in);
-    //    создали первого персонажа
-    static Student ivanov = new Developer("Ivanov Ivan", "Developer", "01.06.2020", Developer.courses);
-    //   создали второго персонажа
-    static Student sidorov = new AQE(Sidorov.NAME.getValue(), Sidorov.CURR.getValue(), Sidorov.START_DATE.getValue(), AQE.courses);
-    //        прочитали из консоли дату
-    private static String dateOfLaunch = ReadFromConsole.getDateOfLaunch(in);
-    //        прочитали из консоли тип отчета
-    static String typeReport = ReadFromConsole.getTypeOfReport(in);
-    //        прочитали из консоли время отчета
-    static String timeReport = ReadFromConsole.getTimeReport(in);
+//    TODO разбить на пакеты
+    //TODO lombok
+    // TODO логирование вместо sout
 
+    //    создали первого персонажа
+   final static Student ivanov = new Developer("Ivanov Ivan", "Developer", "01.06.2020");
+    //   создали второго персонажа
+   final static Student sidorov = new AQE("Sidorov Ivan", "AQE", "01.06.2020");
+    //        прочитали из консоли дату
+    private static final String dateOfLaunch = ReadFromConsole.getDateOfLaunch();
+    //        прочитали из консоли тип отчета
+    private static final String typeReport = ReadFromConsole.getTypeOfReport();
+    //        прочитали из консоли время отчета
+    private static final String timeReport = ReadFromConsole.getTimeReport();
+//    var
     public static void main(String[] args) throws ParseException {
         Report report = new Report();
+        Person person = new Person();
+        person.getName();
 //        вывели отчет
         report.reportToConsole(ivanov, dateOfLaunch, typeReport, timeReport);
         report.reportToConsole(sidorov, dateOfLaunch, typeReport, timeReport);
-
     }
 }

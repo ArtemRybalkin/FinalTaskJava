@@ -1,14 +1,17 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.oracle.webservices.internal.api.databinding.DatabindingMode;
+import lombok.Getter;
 
+import java.util.List;
 
 public abstract class Student {
 
     private final String name;
     private final String CURRICULUM;
     private final String startDate;
-    private final Map<String, Integer> courses;
+
+    private List<String> courseNames;
+
+    private List<Integer> coursesDuration;
 
     public String getName() {
         return name;
@@ -22,25 +25,26 @@ public abstract class Student {
         return startDate;
     }
 
-    public Map<String, Integer> getCourses() {
-        return courses;
-    }
 
-    public abstract int getDurCourses();
+    public abstract int getDurAllCourses();
+
 
     public List<String> getCourseNames() {
-        return new ArrayList<>(courses.keySet());
+        return courseNames;
     }
+
 
     public List<Integer> getCourseDuration() {
-        return new ArrayList<>(courses.values());
+        return coursesDuration;
     }
 
-    public Student(String name, String CURRICULUM, String startDate, Map<String, Integer> courses) {
+    public Student(String name, String CURRICULUM, String startDate, List courseNames, List coursesDuration) {
         this.name = name;
         this.CURRICULUM = CURRICULUM;
         this.startDate = startDate;
-        this.courses = courses;
+        this.courseNames = courseNames;
+        this.coursesDuration = coursesDuration;
+
     }
 
 
