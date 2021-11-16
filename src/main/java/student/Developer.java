@@ -7,8 +7,8 @@ public class Developer extends Student {
     private static final List<String> courseNames = new ArrayList<>();
     private static final List<Integer> coursesDuration = new ArrayList<>();
 
-    public Developer(String name, String CURRICULUM, String startDate) {
-        super(name, CURRICULUM, startDate, courseNames, coursesDuration);
+    public Developer(String name, String curriculum, String startDate) {
+        super(name, curriculum, startDate, courseNames, coursesDuration);
         setCourseNames("Java");
         setCourseNames("JDBC");
         setCourseNames("Spring");

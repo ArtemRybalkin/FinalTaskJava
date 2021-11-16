@@ -5,14 +5,14 @@ public enum Status {
     COMPLETE("complete"),
     NOT_COMPLETE("not complete ");
 
-    private final String status;
+    private final String statusType;
 
     Status(String value) {
-        this.status = value;
+        this.statusType = value;
     }
 
-    public String getStatus() {
-        return status;
+    public String getStatusType() {
+        return statusType;
     }
 
 }

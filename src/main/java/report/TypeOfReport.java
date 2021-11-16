@@ -1,8 +1,8 @@
 package report;
 
 public enum TypeOfReport {
-    shortReport ("Short"),
-    fullReport ("Full");
+    SHORT_REPORT("Short"),
+    FULL_REPORT("Full");
     private final String typeOfReport;
     TypeOfReport(String value) {
         this.typeOfReport = value;

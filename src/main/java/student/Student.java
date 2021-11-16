@@ -32,9 +32,9 @@ public abstract class Student {
         coursesDuration.add(courseDuration);
     }
 
-    public Student(String name, String CURRICULUM, String startDate, List<String> courseNames, List<Integer> coursesDuration) {
+    public Student(String name, String curriculum, String startDate, List<String> courseNames, List<Integer> coursesDuration) {
         this.name = name;
-        this.curriculum = CURRICULUM;
+        this.curriculum = curriculum;
         this.startDate = startDate;
         this.courseNames = courseNames;
         this.coursesDuration = coursesDuration;
