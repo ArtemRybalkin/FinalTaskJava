@@ -2,8 +2,8 @@ package status;
 
 public enum Status {
 
-    COMPLETE ("complete"),
-    NOT_COMPLETE ("not complete ");
+    COMPLETE("complete"),
+    NOT_COMPLETE("not complete ");
 
     private final String status;
 

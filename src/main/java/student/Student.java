@@ -1,52 +1,43 @@
 package student;
 
-import com.oracle.webservices.internal.api.databinding.DatabindingMode;
 import lombok.Getter;
 
 import java.util.List;
 
 public abstract class Student {
-
+    @Getter
     private final String name;
-    private final String CURRICULUM;
+    @Getter
+    private final String curriculum;
+    @Getter
     private final String startDate;
+    @Getter
+    private final List<String> courseNames;
+    @Getter
+    private final List<Integer> coursesDuration;
 
-    private List<String> courseNames;
-
-    private List<Integer> coursesDuration;
-
-    public String getName() {
-        return name;
+    public int getDurAllCourses() {
+        int sum = 0;
+        for (Integer courseDuration : coursesDuration) {
+            sum += courseDuration;
+        }
+        return sum;
     }
 
-    public String getCurr() {
-        return CURRICULUM;
+    public void setCourseNames(String courseName) {
+        courseNames.add(courseName);
     }
 
-    public String getStartDate() {
-        return startDate;
+    public void setCoursesDuration(int courseDuration) {
+        coursesDuration.add(courseDuration);
     }
 
-
-    public abstract int getDurAllCourses();
-
-
-    public List<String> getCourseNames() {
-        return courseNames;
-    }
-
-
-    public List<Integer> getCourseDuration() {
-        return coursesDuration;
-    }
-
-    public Student(String name, String CURRICULUM, String startDate, List courseNames, List coursesDuration) {
+    public Student(String name, String CURRICULUM, String startDate, List<String> courseNames, List<Integer> coursesDuration) {
         this.name = name;
-        this.CURRICULUM = CURRICULUM;
+        this.curriculum = CURRICULUM;
         this.startDate = startDate;
         this.courseNames = courseNames;
         this.coursesDuration = coursesDuration;
-
     }
 
 

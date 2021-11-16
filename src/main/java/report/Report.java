@@ -6,7 +6,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import status.Status;
 import student.Student;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public class Report {
         allHours = (daysBetween * 8) + (hoursFromConsole - 10);
         int hoursPass = (student.getDurAllCourses() - allHours);
         courseNameList = student.getCourseNames();
-        courseDurationList = student.getCourseDuration();
+        courseDurationList = student.getCoursesDuration();
         getStatus(allHours);
 
         if (typeReport.equals("Short")) {
@@ -41,13 +40,13 @@ public class Report {
     }
 
     private void shortReport(Student student, int hoursPass) {
-        System.out.println("(Generating report date - " + formatDate + ", " + hoursFromConsole + ":00" + "):");
+        System.out.printf("(Generating report date - %s, %s:00):" + "\n", formatDate, hoursFromConsole);
         if (hoursPass <= 0) {
-            System.out.println(student.getName() + " " + student.getCurr() + " - Training completed. " + getDaysPass(hoursPass) +
-                    " have passed since the end.");
+            System.out.printf("%s %s - Training completed. %s have passed since the end." + "\n",
+                    student.getName(), student.getCurriculum(), getDaysPass(hoursPass));
         } else {
-            System.out.println(student.getName() + " " + student.getCurr() + " - Training is not finished. " +
-                    getDaysPassNot(hoursPass) + " are left until the end.");
+            System.out.printf("%s %s - Training is not finished. %s are left until the end." + "\n",
+                    student.getName(), student.getCurriculum(), getDaysPassNot(hoursPass));
         }
     }
 
@@ -90,18 +89,18 @@ public class Report {
 
     private void printStatus() {
         for (int i = 0; i < courseNameList.size(); i++) {
-            System.out.printf("%s %s hours " + " status.Status: " + fullStatusList.get(i) + "\n", courseNameList.get(i), courseDurationList.get(i));
+            System.out.printf("%s %s hours " + " status: " + fullStatusList.get(i) + "\n", courseNameList.get(i), courseDurationList.get(i));
         }
     }
 
-    static String convertLaunchDate(String dateOfLaunchToReport) throws ParseException {
+   private String convertLaunchDate(String dateOfLaunchToReport) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
         SimpleDateFormat formatter2 = new SimpleDateFormat("dd MMMM yyyy, EEEE");
         Date date = formatter.parse(dateOfLaunchToReport);
         return formatter2.format(date);
     }
 
-   public static int getDaysBetween(Student student, String dateOfLaunch) {
+    public static int getDaysBetween(Student student, String dateOfLaunch) {
         DateTimeFormatter fmt2 = DateTimeFormat.forPattern("dd.MM.yyyy");
         DateTime dt3 = fmt2.parseDateTime(student.getStartDate());
         DateTime dt2 = fmt2.parseDateTime(dateOfLaunch);
@@ -110,7 +109,7 @@ public class Report {
         return daysBetween;
     }
 
-   public static String endDateCourse(Student student, int numbOfWeekends) {
+    public static String endDateCourse(Student student, int numbOfWeekends) {
         DateTimeFormatter fmt2 = DateTimeFormat.forPattern("dd.MM.yyyy");
         DateTime dt3 = fmt2.parseDateTime(student.getStartDate());
         DateTime endDateCourse = (dt3.plusDays(student.getDurAllCourses() / 8 + numbOfWeekends));
