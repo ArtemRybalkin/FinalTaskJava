@@ -1,19 +1,15 @@
 package student;
-
+import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AQE extends Student {
-    static List<String> courseNames = new ArrayList<>();
-    static List<Integer> courseDurations = new ArrayList<>();
-
+    @Getter
+    List<Course> courseList = new ArrayList<>();
     public AQE(String name, String curriculum, String startDate) {
-        super(name, curriculum, startDate, courseNames, courseDurations);
-        setCourseNames("TestDesign");
-        setCourseNames("PageObject");
-        setCourseNames("Selenium");
-        setCoursesDuration(10);
-        setCoursesDuration(16);
-        setCoursesDuration(16);
+        super(name, curriculum, startDate);
+        courseList.add(new Course("TestDesign", 10));
+        courseList.add(new Course("PageObject", 16));
+        courseList.add(new Course("Selenium", 16));
     }
 }

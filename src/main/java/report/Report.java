@@ -1,10 +1,13 @@
 package report;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import status.Status;
+import student.Course;
 import student.Student;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,24 +16,22 @@ import java.util.Date;
 import java.util.List;
 
 public class Report {
-    private static List<Integer> courseDurationList;
-    private List<String> courseNameList;
+
     private String formatDate;
     private int hoursFromConsole;
-    public static List<String> fullStatusList;
     private int allHours;
+    private static final String PATTERNDATE = "dd.MM.yyyy";
+    private static final Logger logger = LogManager.getLogger();
 
-    public void reportToConsole(Student student, String dateOfLaunchToReport, String typeReport, String timeReport) throws ParseException {
-        formatDate = convertLaunchDate(dateOfLaunchToReport);
-        int daysBetween = getDaysBetween(student, dateOfLaunchToReport);
+    public void reportToConsole(Student student, String dateReport, String typeReport, String timeReport) throws ParseException {
+        formatDate = convertLaunchDate(dateReport);
+        int daysBetween = getDaysBetweenStartAndReport(student, dateReport);
         int numOfWeekends = (daysBetween / 7) * 2;
         if (daysBetween > 5) daysBetween -= numOfWeekends;      // с учётом рабочей недели
         hoursFromConsole = Integer.parseInt(timeReport);
         allHours = (daysBetween * 8) + (hoursFromConsole - 10);
-        int hoursPass = (student.getDurAllCourses() - allHours);
-        courseNameList = student.getCourseNames();
-        courseDurationList = student.getCoursesDuration();
-        getStatus(allHours, courseDurationList);
+        int hoursPass = (getSumDurationAllCourses(student) - allHours);
+        getStatus(allHours, student);
 
         if (typeReport.equals("Short")) {
             shortReport(student, hoursPass);
@@ -40,12 +41,12 @@ public class Report {
     }
 
     private void shortReport(Student student, int hoursPass) {
-        System.out.printf("(Generating report date - %s, %s:00):" + "\n", formatDate, hoursFromConsole);
+       logger.info("(Generating report date - {}, {}:00):", formatDate, hoursFromConsole);
         if (hoursPass <= 0) {
-            System.out.printf("%s %s - Training completed. %s have passed since the end." + "\n",
+            logger.info("{} {} - Training completed. {} have passed since the end.",
                     student.getName(), student.getCurriculum(), getDaysPass(hoursPass));
         } else {
-            System.out.printf("%s %s - Training is not finished. %s are left until the end." + "\n",
+            logger.info("{} {} - Training is not finished. {} are left until the end.",
                     student.getName(), student.getCurriculum(), getDaysPassNot(hoursPass));
         }
     }
@@ -59,63 +60,73 @@ public class Report {
     }
 
     private void fullReport(Student student, int hoursPass, int numbOfWeekends) {
-        System.out.println(student.getName());
+        logger.info(student.getName());
         if (hoursPass <= 0) {
-            System.out.printf("working time (from 10 to 18): %s hours" + "\n", student.getDurAllCourses());
-            printStatus();
-            System.out.println("start date: " + student.getStartDate());
-            System.out.println("end date: " + endDateCourse(student, numbOfWeekends));
-            System.out.println("Training completed. " + getDaysPass(hoursPass) + " days have passed since the end.");
+            logger.info("working time (from 10 to 18): {} hours" + "\n", formatDate);
+            printStatus(student);
+            logger.info("start date: {}", student.getStartDate());
+            logger.info("end date: {}", endDateCourse(student, numbOfWeekends));
+            logger.info ("Training completed. {}  days have passed since the end.", getDaysPass(hoursPass));
         } else {
-            System.out.printf("working time (from 10 to 18): %s hours" + "\n", allHours);
-            printStatus();
-            System.out.println("start date: " + student.getStartDate());
-            System.out.println("end date: Not complete ");
-            System.out.println("Training is not completed. " + getDaysPassNot(hoursPass) + " are left until the end.");
+            logger.info("working time (from 10 to 18): {} hours", allHours);
+            printStatus(student);
+            logger.info("start date: {}", student.getStartDate());
+            logger.info("end date: Not complete ");
+            logger.info("Training is not completed. {} are left until the end.", getDaysPassNot(hoursPass));
         }
     }
 
-    public static void getStatus(int allHours, List <Integer> courseDurationList) {
-        fullStatusList = new ArrayList<>();
+    public List<String> getStatus(int allHours, Student student) {
+      List<String>  fullStatusList = new ArrayList<>();
         int sum = 0;
-        for (Integer integer : courseDurationList) {
-            if (integer <= allHours - sum) {
+        for (Course course : student.getCourseList()) {
+            if (course.getDuration() <= allHours - sum) {
                 fullStatusList.add(String.valueOf(Status.COMPLETE.getStatusType()));
             } else
-                fullStatusList.add(Status.NOT_COMPLETE.getStatusType() + (integer - (allHours - sum)) + " hours left");
-            sum += integer;
+                fullStatusList.add(Status.NOT_COMPLETE.getStatusType() + " " + (course.getDuration() - (allHours - sum)) + " hours left");
+            sum += course.getDuration();
+        }
+        return fullStatusList;
+    }
+
+    private void printStatus(Student student) {
+        int i = 0;
+        for (Course course : student.getCourseList()) {
+
+            logger.info("{} {} hours " + " status: {}",
+                    course.getName(), course.getDuration(), getStatus(allHours, student).get(i));
+            i++;
         }
     }
 
-    private void printStatus() {
-        for (int i = 0; i < courseNameList.size(); i++) {
-            System.out.printf("%s %s hours " + " status: %s"  + "\n",
-                    courseNameList.get(i), courseDurationList.get(i), fullStatusList.get(i));
+    public int getSumDurationAllCourses(Student student) {
+        int sum = 0;
+        for (Course course : student.getCourseList()) {
+            sum += course.getDuration();
         }
+        return sum;
     }
 
-   private String convertLaunchDate(String dateOfLaunchToReport) throws ParseException {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+    private String convertLaunchDate(String dateOfLaunchToReport) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat(PATTERNDATE);
         SimpleDateFormat formatter2 = new SimpleDateFormat("dd MMMM yyyy, EEEE");
         Date date = formatter.parse(dateOfLaunchToReport);
         return formatter2.format(date);
     }
 
-    public static int getDaysBetween(Student student, String dateOfLaunch) {
-        DateTimeFormatter fmt2 = DateTimeFormat.forPattern("dd.MM.yyyy");
+    public int getDaysBetweenStartAndReport(Student student, String dateOfLaunch) {
+        DateTimeFormatter fmt2 = DateTimeFormat.forPattern(PATTERNDATE);
         DateTime dt3 = fmt2.parseDateTime(student.getStartDate());
         DateTime dt2 = fmt2.parseDateTime(dateOfLaunch);
         dt2.getDayOfWeek();
-        int daysBetween = Days.daysBetween(dt3, dt2).getDays();  //вычисляем сколько дней прошло с момента старта
-        return daysBetween;
+        return Days.daysBetween(dt3, dt2).getDays();  //вычисляем сколько дней прошло с момента старта
     }
 
-    public static String endDateCourse(Student student, int numbOfWeekends) {
-        DateTimeFormatter fmt2 = DateTimeFormat.forPattern("dd.MM.yyyy");
+    public String endDateCourse(Student student, int numbOfWeekends) {
+        DateTimeFormatter fmt2 = DateTimeFormat.forPattern(PATTERNDATE);
         DateTime dt3 = fmt2.parseDateTime(student.getStartDate());
-        DateTime endDateCourse = (dt3.plusDays(student.getDurAllCourses() / 8 + numbOfWeekends));
-        String dt4 = endDateCourse.toString(fmt2);
-        return dt4;
+        DateTime endDateCourse = (dt3.plusDays(getSumDurationAllCourses(student) / 8 + numbOfWeekends));
+        return endDateCourse.toString(fmt2);
     }
 
 }

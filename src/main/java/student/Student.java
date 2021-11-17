@@ -1,9 +1,10 @@
 package student;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
-
+@AllArgsConstructor
 public abstract class Student {
     @Getter
     private final String name;
@@ -11,34 +12,7 @@ public abstract class Student {
     private final String curriculum;
     @Getter
     private final String startDate;
-    @Getter
-    private final List<String> courseNames;
-    @Getter
-    private final List<Integer> coursesDuration;
 
-    public int getDurAllCourses() {
-        int sum = 0;
-        for (Integer courseDuration : coursesDuration) {
-            sum += courseDuration;
-        }
-        return sum;
-    }
-
-    public void setCourseNames(String courseName) {
-        courseNames.add(courseName);
-    }
-
-    public void setCoursesDuration(int courseDuration) {
-        coursesDuration.add(courseDuration);
-    }
-
-    public Student(String name, String curriculum, String startDate, List<String> courseNames, List<Integer> coursesDuration) {
-        this.name = name;
-        this.curriculum = curriculum;
-        this.startDate = startDate;
-        this.courseNames = courseNames;
-        this.coursesDuration = coursesDuration;
-    }
-
+    public abstract List<Course> getCourseList();
 
 }

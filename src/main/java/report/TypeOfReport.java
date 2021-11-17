@@ -3,11 +3,11 @@ package report;
 public enum TypeOfReport {
     SHORT_REPORT("Short"),
     FULL_REPORT("Full");
-    private final String typeOfReport;
+    private final String type;
     TypeOfReport(String value) {
-        this.typeOfReport = value;
+        this.type = value;
     }
-    public String getTypeOfReport() {
-        return typeOfReport;
+    public String getType() {
+        return type;
     }
 }
