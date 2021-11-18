@@ -1,8 +1,8 @@
 import console.*;
 import report.Report;
-import student.AQE;
-import student.Developer;
-import student.Student;
+import models.AQE;
+import models.Developer;
+import models.Student;
 
 import java.text.ParseException;
 

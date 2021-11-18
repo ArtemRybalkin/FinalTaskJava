@@ -3,9 +3,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import report.Report;
 import report.TypeOfReport;
-import student.AQE;
-import student.Developer;
-import student.Student;
+import models.AQE;
+import models.Developer;
+import models.Student;
 
 public class Tests {
 

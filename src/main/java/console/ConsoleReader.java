@@ -12,9 +12,9 @@ public class ConsoleReader {
     private final Logger logger = LogManager.getLogger();
     public String getDateOfLaunch() {
         String dateOfLaunchFromConsole = "";
-        // считываем дату с консоли
+
         do {
-            logger.info("Please insert the date of launch in format dd.mm.yyyy");
+            logger.info("Please insert the date of launch in the format dd.mm.yyyy");
             dateOfLaunchFromConsole = in.nextLine();
         } while (!dateOfLaunchFromConsole.matches(PATTERN_DATE));
         return dateOfLaunchFromConsole;
@@ -30,7 +30,6 @@ public class ConsoleReader {
     }
 
     public String getTypeOfReport() {
-        //считываем тип отчета с консоли
         logger.info("Please insert the type of report.Report, short (empty or 0) or full(write any text)");
         String textFromConsole = in.nextLine();
         return getType(textFromConsole);
