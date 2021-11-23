@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
+
 @AllArgsConstructor
 public abstract class Student {
     @Getter
@@ -15,4 +16,11 @@ public abstract class Student {
 
     public abstract List<Course> getCourseList();
 
+    public int getSumDurationAllCourses (){
+        int sum = 0;
+        for (Course course : getCourseList()) {
+            sum += course.getDuration();
+        }
+        return sum;
+    }
 }
