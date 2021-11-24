@@ -3,6 +3,7 @@ package models;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -12,7 +13,7 @@ public abstract class Student {
     @Getter
     private final String curriculum;
     @Getter
-    private final String startDate;
+    private final LocalDateTime startDate;
 
     public abstract List<Course> getCourseList();
 

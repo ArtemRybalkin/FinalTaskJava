@@ -5,72 +5,97 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import models.Course;
 import models.Student;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Report {
 
     private final Logger logger = LogManager.getLogger();
-    private int workedHours;
-    PrepareDates prep = new PrepareDates();
+    private final PrepareDates prep = new PrepareDates();
+    private final DateTimeFormatter dateFormatterForShortReport = DateTimeFormatter.ofPattern("d MMMM yyyy, EEEE HH");
+    private String FormatedEndTimeForShortReport;
     ConsoleReader reader = new ConsoleReader();
-
     public void reportToConsole(Student student) {
-        prep.convertDate(student);
-        workedHours = prep.getWorkedHours();
-       TypeOfReport typeOfReport = reader.getTypeOfReport();
-        int hoursPass = (student.getSumDurationAllCourses() - workedHours);
-        if (typeOfReport == TypeOfReport.SHORT_REPORT) {
-            shortReport(student, hoursPass);
+
+        LocalDateTime dateOfReport = prep.getDateOfReport(student);
+        TypeOfReport typeOfReportFromConsole = reader.getTypeOfReportFromConsole();
+        FormatedEndTimeForShortReport = dateOfReport.format(dateFormatterForShortReport);
+        int workedHours = prep.getWorkedHours(student.getStartDate(), dateOfReport);
+
+        int hoursSpent = (student.getSumDurationAllCourses() - workedHours);
+        if (typeOfReportFromConsole == TypeOfReport.SHORT_REPORT) {
+            shortReport(student, hoursSpent);
         } else {
-            fullReport(student, hoursPass);
+            fullReport(student, hoursSpent, workedHours);
         }
     }
 
-    private void shortReport(Student student, int hoursPass) {
-        logger.info("(Generating report date - {}:00):", prep.endTimeFormated);
-        if (hoursPass <= 0) {
+    private void shortReport(Student student, int hoursSpent) {
+        logger.info("(Generating report date - {}:00):", FormatedEndTimeForShortReport);
+        if (hoursSpent <= 0) {
             logger.info("{} {} - Training completed. {} have passed since the end.",
-                    student.getName(), student.getCurriculum(), getDaysPass(hoursPass));
+                    student.getName(), student.getCurriculum(), getTimeAfterFinishCourse(hoursSpent));
         } else {
             logger.info("{} {} - Training is not finished. {} are left until the end.",
-                    student.getName(), student.getCurriculum(), getDaysPassNot(hoursPass));
+                    student.getName(), student.getCurriculum(), getTimeLeftToCompleteCourse(hoursSpent));
         }
     }
 
-    private String getDaysPass(int hoursPass) {
-        return (-hoursPass / 8) + " days " + (-hoursPass % 8) + " hours";
+    private String getTimeAfterFinishCourse(int hoursSpent) {
+        return (-hoursSpent / 8) + " days " + (-hoursSpent % 8) + " hours";
     }
 
-    private String getDaysPassNot(int hoursPass) {
-        return hoursPass / 8 + " days " + hoursPass % 8 + " hours";
+    private String getTimeLeftToCompleteCourse(int hoursSpent) {
+        return hoursSpent / 8 + " days " + hoursSpent % 8 + " hours";
     }
 
-    private void fullReport(Student student, int hoursPass) {
+    private void fullReport(Student student, int hoursSpent, int workedHours) {
         logger.info(student.getName());
-        if (hoursPass <= 0) {
+        if (hoursSpent <= 0) {
             logger.info("working time (from 10 to 18): {} hours", student.getSumDurationAllCourses());
-            printStatus(student);
-            logger.info("start date: {}", prep.startTime.toLocalDate());
-            logger.info("end date: {}", endDateCourse());
-            logger.info("Training completed. {} have passed since the end.", getDaysPass(hoursPass));
+            printStatus(student, workedHours);
+            logger.info("start date: {}", student.getStartDate().toLocalDate());
+            logger.info("end date: {}", getEndDateCourse(student.getStartDate(), student.getSumDurationAllCourses() / 8));
+            logger.info("Training completed. {} have passed since the end.", getTimeAfterFinishCourse(hoursSpent));
         } else {
             logger.info("working time (from 10 to 18): {} hours", workedHours);
-            printStatus(student);
+            printStatus(student, workedHours);
             logger.info("start date: {}", student.getStartDate());
             logger.info("end date: Not complete ");
-            logger.info("Training is not completed. {} are left until the end.", getDaysPassNot(hoursPass));
+            logger.info("Training is not completed. {} are left until the end.", getTimeLeftToCompleteCourse(hoursSpent));
         }
     }
 
-    private void printStatus(Student student) {
+    public void printStatus(Student student, int workedHours) {
+        int sum = 0;
         for (Course course : student.getCourseList()) {
             course.setStatus(workedHours, student);
-            logger.info("{} {} hours " + "status: {}", course.getName(), course.getDuration(), course.getStatus());
+            if (course.getDuration() <= workedHours - sum) {
+                logger.info("{} {} hours status: {}", course.getName(), course.getDuration(), course.getStatus().getStatusType());
+
+            } else {
+                logger.info("{} {} hours status: {} {} hours left",
+                        course.getName(), course.getDuration(), course.getStatus().getStatusType(), (course.getDuration() - (workedHours - sum)));
+            }
+            sum += course.getDuration();
+
         }
     }
 
-    public LocalDateTime endDateCourse() {
-        return prep.startTime.plusDays(prep.getWorkedHours() / 8);
-    }
+    public LocalDate getEndDateCourse(LocalDateTime startDate, int workedDays) {
 
+        LocalDate endDateCourse = startDate.toLocalDate();
+        int countWeekend;
+        for (int i = 0; i <= workedDays; i++) {
+            if ((endDateCourse.getDayOfWeek() == DayOfWeek.SUNDAY) || (endDateCourse.getDayOfWeek() == DayOfWeek.SATURDAY)) {
+                countWeekend = 1;
+            } else countWeekend = 0;
+            endDateCourse = endDateCourse.plusDays(countWeekend + 1);
+        }
+        return endDateCourse;
+    }
 }
+

@@ -11,65 +11,61 @@ import java.time.format.DateTimeFormatter;
 
 public class PrepareDates {
 
-    private static final int BEGINWORKHOUR = 10;
-    private static final int ENDWORKHOUR = 18;
-
-    private LocalDateTime endTime;
-    LocalDateTime startTime;
-    String endTimeFormated = "";
+    private static final int START_WORK_HOUR = 10;
+    private static final int END_WORK_HOUR = 18;
+    private final DateTimeFormatter formatterForDateOfReport = DateTimeFormatter.ofPattern("d.MM.yyyy H");
     private final Logger logger = LogManager.getLogger();
-    ConsoleReader reader = new ConsoleReader();
+    private final ConsoleReader reader = new ConsoleReader();
 
-    public void convertDate(Student student) {
+    public LocalDateTime getDateOfReport(Student student) {
 
-        int count;
+        LocalDateTime startDate = student.getStartDate();
+        LocalDateTime dateOfReport = null;
+        boolean isComplete;
         do {
             try {
-
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d.MM.yyyy H");
-                DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("d MMMM yyyy, EEEE HH");
-                startTime = LocalDateTime.parse(student.getStartDate(), formatter);
-                endTime = LocalDateTime.parse(reader.getDateOfLaunch(), formatter);
-                endTimeFormated = endTime.format(formatter2);
-                count = 0;
-                if (startTime.isAfter(endTime)) {
+                dateOfReport = LocalDateTime.parse(reader.getDateOfReportFromConsole(), formatterForDateOfReport);
+                isComplete = true;
+                if (startDate.isAfter(dateOfReport)) {
                     logger.info("Please insert date after start");
-                    count = 1;
+                    isComplete = false;
                 }
-                if ((endTime.getDayOfWeek() == DayOfWeek.SUNDAY) || endTime.getDayOfWeek() == DayOfWeek.SATURDAY) {
+                if ((dateOfReport.getDayOfWeek() == DayOfWeek.SUNDAY) || dateOfReport.getDayOfWeek() == DayOfWeek.SATURDAY) {
                     logger.info("Please insert not weekend");
-                    count = 1;
+                    isComplete = false;
                 }
-                if (endTime.getHour() > ENDWORKHOUR || endTime.getHour() < BEGINWORKHOUR) {
+                if (dateOfReport.getHour() > END_WORK_HOUR || dateOfReport.getHour() < START_WORK_HOUR) {
                     logger.info("Please insert correct time");
-                    count = 1;
+                    isComplete = false;
                 }
             } catch (Exception e) {
                 logger.info(e.getMessage());
-                count = 1;
+                isComplete = false;
             }
-        } while (count != 0);
+        } while (!isComplete);
+        return dateOfReport;
     }
 
-    public int getWorkedHours() {
+    public int getWorkedHours(LocalDateTime startDate, LocalDateTime dateOfReport) {
 
         int workedHours = 0;
-        while (!sameDay(startTime, endTime)) {
-            workedHours += workedHoursDay(startTime);
-            startTime = startTime.plusDays(1);
+        while (!sameDay(startDate, dateOfReport)) {
+            workedHours += workedHoursAtOneDay(startDate);
+            startDate = startDate.plusDays(1);
         }
-        workedHours += ((endTime.getHour()) - startTime.getHour());
+        workedHours += ((dateOfReport.getHour()) - startDate.getHour());
         return workedHours;
     }
 
-    private int workedHoursDay(LocalDateTime startTime) {
-        if ((startTime.getDayOfWeek() == DayOfWeek.SUNDAY) || (startTime.getDayOfWeek() == DayOfWeek.SATURDAY))
+    private int workedHoursAtOneDay(LocalDateTime startDate) {
+
+        if ((startDate.getDayOfWeek() == DayOfWeek.SUNDAY) || (startDate.getDayOfWeek() == DayOfWeek.SATURDAY))
             return 0;
-        else return (ENDWORKHOUR - startTime.getHour());
+        else return (END_WORK_HOUR - startDate.getHour());
     }
 
-    private boolean sameDay(LocalDateTime startTime, LocalDateTime endTime) {
-        return startTime.getYear() == endTime.getYear() && startTime.getMonth() == endTime.getMonth() &&
-                startTime.getDayOfMonth() == endTime.getDayOfMonth();
+    private boolean sameDay(LocalDateTime startDate, LocalDateTime dateOfReport) {
+        return startDate.getYear() == dateOfReport.getYear() && startDate.getMonth() == dateOfReport.getMonth() &&
+                startDate.getDayOfMonth() == dateOfReport.getDayOfMonth();
     }
 }

@@ -12,16 +12,14 @@ public class Course {
     @Getter
     private final int duration;
     @Getter
-    private String status;
+    private Status status;
 
-    public void setStatus(int allHours, Student student) {
+    public void setStatus(int workedHours, Student student) {
 
         int sum = 0;
         for (Course course : student.getCourseList()) {
-            if (course.getDuration() <= allHours - sum) {
-                course.status = Status.COMPLETE.getStatusType();
-            } else {
-                course.status = Status.NOT_COMPLETE.getStatusType() + " " + (course.getDuration() - (allHours - sum)) + " hours left";
+            if (course.getDuration() >= workedHours - sum) {
+                course.status = Status.NOT_COMPLETE;
             }
             sum += course.getDuration();
         }
