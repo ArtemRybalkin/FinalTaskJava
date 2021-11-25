@@ -16,13 +16,14 @@ public class Report {
     private final Logger logger = LogManager.getLogger();
     private final PrepareDates prep = new PrepareDates();
     private final DateTimeFormatter dateFormatterForShortReport = DateTimeFormatter.ofPattern("d MMMM yyyy, EEEE HH");
-    private String FormatedEndTimeForShortReport;
-    ConsoleReader reader = new ConsoleReader();
+    private String FormatEndTimeForShortReport;
+    private final ConsoleReader reader = new ConsoleReader();
+
     public void reportToConsole(Student student) {
 
         LocalDateTime dateOfReport = prep.getDateOfReport(student);
         TypeOfReport typeOfReportFromConsole = reader.getTypeOfReportFromConsole();
-        FormatedEndTimeForShortReport = dateOfReport.format(dateFormatterForShortReport);
+        FormatEndTimeForShortReport = dateOfReport.format(dateFormatterForShortReport);
         int workedHours = prep.getWorkedHours(student.getStartDate(), dateOfReport);
 
         int hoursSpent = (student.getSumDurationAllCourses() - workedHours);
@@ -34,7 +35,7 @@ public class Report {
     }
 
     private void shortReport(Student student, int hoursSpent) {
-        logger.info("(Generating report date - {}:00):", FormatedEndTimeForShortReport);
+        logger.info("(Generating report date - {}:00):", FormatEndTimeForShortReport);
         if (hoursSpent <= 0) {
             logger.info("{} {} - Training completed. {} have passed since the end.",
                     student.getName(), student.getCurriculum(), getTimeAfterFinishCourse(hoursSpent));
@@ -58,14 +59,16 @@ public class Report {
             logger.info("working time (from 10 to 18): {} hours", student.getSumDurationAllCourses());
             printStatus(student, workedHours);
             logger.info("start date: {}", student.getStartDate().toLocalDate());
-            logger.info("end date: {}", getEndDateCourse(student.getStartDate(), student.getSumDurationAllCourses() / 8));
+            logger.info("end date: {}",
+                    getEndDateCourse(student.getStartDate(), student.getSumDurationAllCourses() / 8));
             logger.info("Training completed. {} have passed since the end.", getTimeAfterFinishCourse(hoursSpent));
         } else {
             logger.info("working time (from 10 to 18): {} hours", workedHours);
             printStatus(student, workedHours);
             logger.info("start date: {}", student.getStartDate());
             logger.info("end date: Not complete ");
-            logger.info("Training is not completed. {} are left until the end.", getTimeLeftToCompleteCourse(hoursSpent));
+            logger.info("Training is not completed. {} are left until the end.",
+                    getTimeLeftToCompleteCourse(hoursSpent));
         }
     }
 
@@ -74,14 +77,13 @@ public class Report {
         for (Course course : student.getCourseList()) {
             course.setStatus(workedHours, student);
             if (course.getDuration() <= workedHours - sum) {
-                logger.info("{} {} hours status: {}", course.getName(), course.getDuration(), course.getStatus().getStatusType());
-
+                logger.info("{} {} hours status: {}",
+                        course.getName(), course.getDuration(), course.getStatus().getStatusType());
             } else {
                 logger.info("{} {} hours status: {} {} hours left",
                         course.getName(), course.getDuration(), course.getStatus().getStatusType(), (course.getDuration() - (workedHours - sum)));
             }
             sum += course.getDuration();
-
         }
     }
 

@@ -1,13 +1,16 @@
 package models;
 
 import lombok.Getter;
-import status.Status;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.time.LocalDateTime;
+
 import java.util.List;
 
+import status.Status;
+
 public class AQE extends Student {
+
     @Getter
     private final List<Course> courseList = new ArrayList<>();
 

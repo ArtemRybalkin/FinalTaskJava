@@ -10,6 +10,7 @@ public class ConsoleReader {
 
     private final Scanner in = new Scanner(System.in);
     private final Logger logger = LogManager.getLogger();
+
     public String getDateOfReportFromConsole() {
         logger.info("Please insert the date and time of launch in the format dd.MM.yyyy HH");
         return in.nextLine();

@@ -14,7 +14,4 @@ public enum Status {
     public String getStatusType() {
         return statusType;
     }
-
-
-
 }

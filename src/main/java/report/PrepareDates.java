@@ -17,7 +17,7 @@ public class PrepareDates {
     private final Logger logger = LogManager.getLogger();
     private final ConsoleReader reader = new ConsoleReader();
 
-    public LocalDateTime getDateOfReport(Student student) {
+    protected LocalDateTime getDateOfReport(Student student) {
 
         LocalDateTime startDate = student.getStartDate();
         LocalDateTime dateOfReport = null;
@@ -39,7 +39,7 @@ public class PrepareDates {
                     isComplete = false;
                 }
             } catch (Exception e) {
-                logger.info(e.getMessage());
+                logger.info("Please insert correct date");
                 isComplete = false;
             }
         } while (!isComplete);

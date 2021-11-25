@@ -1,14 +1,17 @@
 package models;
+
 import lombok.Getter;
-import status.Status;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import status.Status;
+
 public class Developer extends Student {
+
     @Getter
-    private  final List<Course> courseList = new ArrayList<>();
+    private final List<Course> courseList = new ArrayList<>();
 
     public Developer(String name, String curriculum, LocalDateTime startDate) {
         super(name, curriculum, startDate);
