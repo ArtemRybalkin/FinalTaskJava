@@ -14,27 +14,27 @@ import java.time.format.DateTimeFormatter;
 public class Report {
 
     private final Logger logger = LogManager.getLogger();
-    private final PrepareDates prep = new PrepareDates();
+    private final PrepareDateForReport preparedDateForReport = new PrepareDateForReport();
     private final DateTimeFormatter dateFormatterForShortReport = DateTimeFormatter.ofPattern("d MMMM yyyy, EEEE HH");
     private String FormatEndTimeForShortReport;
     private final ConsoleReader reader = new ConsoleReader();
 
     public void reportToConsole(Student student) {
 
-        LocalDateTime dateOfReport = prep.getDateOfReport(student);
+        LocalDateTime dateOfReport = preparedDateForReport.getDateOfReport(student);
         TypeOfReport typeOfReportFromConsole = reader.getTypeOfReportFromConsole();
         FormatEndTimeForShortReport = dateOfReport.format(dateFormatterForShortReport);
-        int workedHours = prep.getWorkedHours(student.getStartDate(), dateOfReport);
+        int workedHours = preparedDateForReport.getWorkedHours(student.getStartDate(), dateOfReport);
 
         int hoursSpent = (student.getSumDurationAllCourses() - workedHours);
         if (typeOfReportFromConsole == TypeOfReport.SHORT_REPORT) {
-            shortReport(student, hoursSpent);
+            printShortReport(student, hoursSpent);
         } else {
-            fullReport(student, hoursSpent, workedHours);
+            printFullReport(student, hoursSpent, workedHours);
         }
     }
 
-    private void shortReport(Student student, int hoursSpent) {
+    private void printShortReport(Student student, int hoursSpent) {
         logger.info("(Generating report date - {}:00):", FormatEndTimeForShortReport);
         if (hoursSpent <= 0) {
             logger.info("{} {} - Training completed. {} have passed since the end.",
@@ -53,7 +53,7 @@ public class Report {
         return hoursSpent / 8 + " days " + hoursSpent % 8 + " hours";
     }
 
-    private void fullReport(Student student, int hoursSpent, int workedHours) {
+    private void printFullReport(Student student, int hoursSpent, int workedHours) {
         logger.info(student.getName());
         if (hoursSpent <= 0) {
             logger.info("working time (from 10 to 18): {} hours", student.getSumDurationAllCourses());

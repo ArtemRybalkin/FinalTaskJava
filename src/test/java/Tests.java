@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import report.PrepareDates;
+import report.PrepareDateForReport;
 import report.Report;
 import report.TypeOfReport;
 import models.AQE;
@@ -20,7 +20,7 @@ class Tests {
 
     private final Student testStudentDeveloper = new Developer("Petrov Vanya", "Developer", LocalDateTime.of(LocalDate.of(2020, 6, 1), LocalTime.of(10, 0)));
     private final Student testStudentAQE = new AQE("Petrenko Petro", "AQE", LocalDateTime.of(LocalDate.of(2020, 6, 1), LocalTime.of(10, 0)));
-    private final PrepareDates prepare = new PrepareDates();
+    private final PrepareDateForReport prepare = new PrepareDateForReport();
     private final Report report = new Report();
     private final LocalDateTime dateOfReport = LocalDateTime.of(LocalDate.of(2020, 6, 10), LocalTime.of(10, 0));
     private final LocalDate endDateCourseDeveloper = LocalDate.of(2020, 6, 10);
@@ -68,14 +68,13 @@ class Tests {
     }
 
     @Test
-    void checkSize() {
+    void checkSizeOfCourseList() {
         IndexOutOfBoundsException thrown = Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
             testStudentDeveloper.getCourseList().get(5);
         });
         Assertions.assertEquals("Index: 5, Size: 3", thrown.getMessage());
     }
 
-    //    TODO add negative tests, parametr
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2})
     void checkStatusComplete(int arg) {

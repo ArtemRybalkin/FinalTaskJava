@@ -5,11 +5,12 @@ import models.Student;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class PrepareDates {
+public class PrepareDateForReport {
 
     private static final int START_WORK_HOUR = 10;
     private static final int END_WORK_HOUR = 18;
@@ -38,7 +39,7 @@ public class PrepareDates {
                     logger.info("Please insert correct time");
                     isComplete = false;
                 }
-            } catch (Exception e) {
+            } catch (DateTimeException e) {
                 logger.info("Please insert correct date");
                 isComplete = false;
             }
